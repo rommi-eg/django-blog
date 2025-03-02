@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -24,6 +25,15 @@ class Post(models.Model):
     # Пример: django-reinhardt-legend-jazz
     slug = models.SlugField(
         max_length=255,
+    )
+
+    # Поле определяет взаимосвязь многие-к-одному, означающую,
+    # что каждый пост написан пользователем и каждый пользователь
+    # может написать лкбое количетво постов.
+    author = models.ForeignKey( # внешний кдюч в базе данных
+        to=User, # молель на которую ссылается внешний ключ
+        on_delete=models.CASCADE, # при удалении пользователя, удалятся связанные с ним посты
+        related_name='posts', # имя обратной связи, от  User к Post
     )
 
     # Поле для хранения тела поста. Поле с типом TextField
