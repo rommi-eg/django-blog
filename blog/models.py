@@ -1,11 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Post(models.Model):
     """ Модель поста в базе данных """
 
     # Заголовок поста. Поле с типом CharField, которое
-    # транслируется в солбец VARCHAR в базе данных SQL
+    # транслируется в солбец VARCHAR в базе данных SQL.
     title = models.CharField(
         max_length=255, # максиьвльная длина 255 символов
     )
@@ -19,9 +20,30 @@ class Post(models.Model):
     )
 
     # Поле для хранения тела поста. Поле с типом TextField
-    # транслируется в солбец Text в базе данных SQL
+    # транслируется в солбец Text в базе данных SQL.
     body = models.TextField(
         default='Скоро здесь будет статья...' # значение по умолчанию
+    )
+
+    # Поле для хранения даты и времени публикации поста.
+    # Поле с типом DateTimeField транслируется в солбец
+    # DATETIME в базе данных SQL.
+    publish = models.DateTimeField(
+        default=timezone.now # возвращает текущую дату/время в формате, зависящем от часового пояса
+    )
+
+    # Поле для хранения даты и времени создания поста.
+    # Поле с типом DateTimeField транслируется в солбец
+    # DATETIME в базе данных SQL.
+    created = models.DateTimeField(
+        auto_now_add=True # дата будет сохраняться автоматически во время создания объекта
+    )
+
+    # Поле для хранения даты и времени обновления поста.
+    # Поле с типом DateTimeField транслируется в солбец
+    # DATETIME в базе данных SQL.
+    updatet = models.DateTimeField(
+        auto_now=True # дата будет обновляться автоматически во время сохранения объекта
     )
 
     def __str__(self):
