@@ -4,7 +4,13 @@ from django.utils import timezone
 
 # Create your models here.
 class Post(models.Model):
-    """ Модель поста в базе данных """
+    """ Модель поста в базе данных """ 
+
+    class Status(models.TextChoices):
+        """ Класс перечисления статуса """
+
+        DRAFT = 'DF', 'Draft'
+        PUBLISHED = 'PB', 'Published'
 
     # Заголовок поста. Поле с типом CharField, которое
     # транслируется в солбец VARCHAR в базе данных SQL.
@@ -23,28 +29,36 @@ class Post(models.Model):
     # Поле для хранения тела поста. Поле с типом TextField
     # транслируется в солбец Text в базе данных SQL.
     body = models.TextField(
-        default='Скоро здесь будет статья...' # значение по умолчанию
+        default='Скоро здесь будет статья...', # значение по умолчанию
     )
 
     # Поле для хранения даты и времени публикации поста.
     # Поле с типом DateTimeField транслируется в солбец
     # DATETIME в базе данных SQL.
     publish = models.DateTimeField(
-        default=timezone.now # возвращает текущую дату/время в формате, зависящем от часового пояса
+        default=timezone.now, # возвращает текущую дату/время в формате, зависящем от часового пояса
     )
 
     # Поле для хранения даты и времени создания поста.
     # Поле с типом DateTimeField транслируется в солбец
     # DATETIME в базе данных SQL.
     created = models.DateTimeField(
-        auto_now_add=True # дата будет сохраняться автоматически во время создания объекта
+        auto_now_add=True, # дата будет сохраняться автоматически во время создания объекта
     )
 
     # Поле для хранения даты и времени обновления поста.
     # Поле с типом DateTimeField транслируется в солбец
     # DATETIME в базе данных SQL.
     updatet = models.DateTimeField(
-        auto_now=True # дата будет обновляться автоматически во время сохранения объекта
+        auto_now=True, # дата будет обновляться автоматически во время сохранения объекта
+    )
+
+    # Поле для хранения статуса поста. Поле с типом CharField,
+    # которое транслируется в солбец VARCHAR в базе данных SQL.
+    status = models.CharField(
+        max_length=2,
+        choices=Status.choices, # ограничивает значение поля вариантами из Status.choices
+        default=Status.DRAFT, # значение по умолчанию
     )
 
     class Meta:
