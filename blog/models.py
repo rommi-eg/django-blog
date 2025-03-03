@@ -4,6 +4,15 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
+class PublishedManager(models.Manager):
+    """ Класс модельного менеджера. 
+        Позволяет извлекать посты со статусом PUBLISHED 
+    """
+    def get_queryset(self):
+        """ Возвращает набор запросов QuerySet, который будет исполнен """
+        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+
+
 class Post(models.Model):
     """ Модель поста в базе данных """ 
 
@@ -70,6 +79,9 @@ class Post(models.Model):
         choices=Status.choices, # ограничивает значение поля вариантами из Status.choices
         default=Status.DRAFT, # значение по умолчанию
     )
+
+    objects = models.Manager() # стандарный менеджер, применяемый по умолчанию
+    published = PublishedManager() # конкретно-прикладной менеджер
 
     class Meta:
         """ Класс определяет метаданные модели """
