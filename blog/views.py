@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404
 from .models import Post
 
 
@@ -19,14 +18,13 @@ def post_list(request):
 
 def post_detail(request):
     """ Представление одиночного поста на странице """
-
-    try:
-        # пытаемся извлечь объект Post с заданным id
-        post = Post.published.get(id=id)
-    except Post.DoesNotExist: # если возникнет исключение DoesNotExist
-        # поднимаем исключение и возвращаем ошибку HTTP
-        # с кодом состояния 404
-        raise Http404('No Post found')
+    
+    # Извлекаем объект, соответствующий переданным параметрам.
+    # Если объект не найден вернется мсключение HTTP с кодом
+    # состояния 404.
+    post = get_object_or_404(
+        Post, id=id, status=Post.Status.PUBLISHED,
+    )
     
     return render(
         request=request,
