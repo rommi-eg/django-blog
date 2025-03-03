@@ -11,3 +11,35 @@ class PostAdmin(admin.ModelAdmin):
     list_display = (  
         'title', 'slug', 'author', 'publish', 'status',
     )
+
+    # Создает фильтр в панели администратора по 
+    # указанным полям.
+    list_filter = (
+        'status', 'created', 'publish', 'author',
+    )
+
+    # Добавляет строку поиска и определяет список полей,
+    # по которым будет происходить поиск.
+    search_fields = (
+        'title', 'body',
+    )
+
+    # Позволяет автоматически заполнять поле slag при
+    # вводе заголовка статьи.
+    prepopulated_fields = {
+        'slug': ('title',),
+    }
+
+    # Задает отображение поля поисковым виджетом.
+    raw_id_fields = (
+        'author',
+    )
+
+    # Добавляет навигационные ссылки по иерархии дат.
+    date_hierarchy = 'publish'
+
+    # Задает критерии сортировки, которые будут использованы
+    # по умолчанию.
+    ordering = (
+        'status', 'publish',
+    )
