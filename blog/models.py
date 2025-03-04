@@ -112,5 +112,13 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         """ Возвращает канонический url-адрес объекта """
-        return reverse('blog:post_detail', kwargs={'pk': self.pk})
+        return reverse(
+            'blog:post_detail', 
+            args=[
+                self.publish.year, # длбавляем в url год публикации поста
+                self.publish.month, # длбавляем в url месяц публикации поста
+                self.publish.day, # длбавляем в url день публикации поста
+                self.slug, # длбавляем в url slug поста
+            ]
+        )
     
