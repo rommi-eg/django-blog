@@ -80,4 +80,3 @@ class PostListView(ListView):
 
     # Шаблон для прорисовки страницы
     template_name = 'blog/post/list.html'
-    
