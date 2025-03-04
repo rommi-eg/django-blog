@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 from .models import Post
 
 
@@ -8,6 +9,17 @@ def post_list(request):
 
     # Извлекаем все посты со статусом PUBLISHED
     posts = Post.published.all() # ипользуется созданый ранее менеджер
+
+    # Постраничная разбивка с 3 постами на странице
+    paginator = Paginator(post_list, 3)
+
+    # Извлекаем GET-параметр page и сохраняем его в переменной page_number
+    # Этот параметр содержин запрошеный номер страницы. Если параметра нет
+    # то используется стандартное значение 1, чтобы загрузить первую страницу. 
+    page_number = request.GET.get('page', 1)
+    
+    # Получаем объекты для желаемой страницы, вызвав метод page()
+    posts = paginator.page(page_number)
 
     return render(
         request=request, # принимаемый объект request
