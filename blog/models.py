@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 
@@ -105,3 +106,7 @@ class Post(models.Model):
         """ Возвращает строковый литерал объекта в удобочитаемом представлении """
         return self.title
     
+    def get_absolute_url(self):
+        """ Возвращает канонический url-адрес объекта """
+        return reverse('blog:post_detail', args=[self.id])
+
