@@ -1,0 +1,31 @@
+<!-- Наследуемся от шаблонв base.html -->
+{% extends "blog/base.html" %}
+
+<!-- Заполняем блок title -->
+{% block title %}My Blog{% endblock title %}
+
+<!-- Заполняем блок content -->
+{% block content %}
+    <h1>My Blog</h1>
+    <!-- Прогоняем в цикле посты получая данные о каждом посте -->
+    {% for post in posts %}
+        <h2>
+            <!-- Формируем ссылку на пост с помощью шаблонного тега url  -->
+            <!-- Используем blog:post_detail, чтобы ссылаться на url-адреса в именованном пространстве blog-->
+            <!-- Передаем необходимый параметр (в данном случае post.id), -->
+            <!-- чтобы сформировать ссылку для каждого поста -->
+            <a href="{% url 'blog:post_detail' post.id %}">
+                <!-- Вставляем заголовое поста -->
+                {{ post.title }}
+            </a>
+        </h2>
+        <p class="date">
+            <!-- Вставляем дату публикации и автора -->
+            Published: {{ post.publish}} by {{ post.author }}
+        </p>
+        <!-- Вставляем тело публиуации и применяем два фильтра -->
+        <!-- truncatewords:30 - уcекает значение до указанного числа слов -->
+        <!-- linebreaks - конвертирует резульнат в разрывы строк в формате HTML -->
+        {{ post.body|truncatewords:30|linebreaks }}
+    {% endfor %}
+{% endblock content %}
