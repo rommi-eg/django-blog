@@ -20,16 +20,19 @@ def post_list(request):
     return render(request=request, template_name=template, context=context)
 
 
-def post_detail(request, id):
+def post_detail(request, year, month, day, post):
     """ Представление одиночного поста на странице """
 
     # Извлекаем объект, соответствующий переданным параметрам.
     # Если объект не найден вернется мсключение HTTP с кодом
     # состояния 404.
     post = get_object_or_404(
-        Post, 
-        id=id, 
+        Post,  
         status=Post.Status.PUBLISHED,
+        slug=post,
+        publish__year=year,
+        publish__month=month,
+        publish__day=day
     )
 
     # Контекстные переменные, чтобы прорисовать шаблон
