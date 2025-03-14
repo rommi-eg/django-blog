@@ -65,7 +65,7 @@ class Post(models.Model):
     author = models.ForeignKey( # внешний кдюч в базе данных
         to=User, # молель на которую ссылается внешний ключ
         on_delete=models.CASCADE, # при удалении пользователя, удалятся связанные с ним посты
-        related_name='blog_posts', # имя обратной связи, от  User к Post
+        related_name='blog_posts', # имя обратной связи, от  User к Post (по сути это имя таблицы в базе)
     )
 
     class Meta:
