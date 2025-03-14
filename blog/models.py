@@ -3,6 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+
+class PublishedManager(models.Manager):
+    """ Класс модельного менеджера. Позволяет извлекать посты со статусом PUBLISHED """
+    
+    def get_queryset(self):
+        """ Возвращает набор запросов QuerySet, который будет исполнен """
+        return super().get_queryset().filter(status=Post.Status.PUBLISHED)
+    
+
 class Post(models.Model):
     """ Класс поста в базе дагнных """
 
@@ -67,6 +76,9 @@ class Post(models.Model):
         on_delete=models.CASCADE, # при удалении пользователя, удалятся связанные с ним посты
         related_name='blog_posts', # имя обратной связи, от  User к Post (по сути это имя таблицы в базе)
     )
+
+    objects = models.Manager() # стандарный менеджер, применяемый по умолчанию
+    published = PublishedManager() # конкретно-прикладной менеджер
 
     class Meta:
         """ Класс определяет метаданные модели """
