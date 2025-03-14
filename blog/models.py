@@ -34,6 +34,7 @@ class Post(models.Model):
     # Пример: django-reinhardt-legend-jazz
     slug = models.SlugField(
         max_length=255,
+        unique_for_date='publish' # делает поле slug уникальным для даты сохраненной в поле publish
     )
 
     # Поле для хранения тела поста. Поле с типом TextField
