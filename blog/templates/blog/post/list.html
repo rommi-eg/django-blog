@@ -35,5 +35,5 @@
     <!-- Загружаем шаблон pagination.html и прорисовываем его с использованием текущего шаблона -->
     <!-- Ключевое слово with используется, чтобы передать дополнительные переменные в шаблон -->
      {{ posts. }}
-    {% include "pagination.html" with page=posts %}
+    {% include "pagination.html" with page=page_obj %}
 {% endblock content %}

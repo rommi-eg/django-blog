@@ -9,7 +9,12 @@ app_name = 'blog'
 urlpatterns = [
     # Шаблон url-адреса, который не принимает аргументов
     # и соотносится с представлением post_list 
-    path('', view=views.post_list, name='post_list'),
+    # path('', view=views.post_list, name='post_list'),
+
+    # Шаблон url-адреса, который не принимает аргументов
+    # и соотносится с представлением рефлизованным в виде класса
+    # PostListView
+    path('', view=views.PostListView.as_view(), name='post_list'),
 
     # Шаблон url-адреса, который не принимает один аргумент
     # id и соотносится с представлением post_detail
