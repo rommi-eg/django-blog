@@ -32,4 +32,8 @@
         <!-- linebreaks - конвертирует резульнат в разрывы строк в формате HTML -->
         {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
+    <!-- Загружаем шаблон pagination.html и прорисовываем его с использованием текущего шаблона -->
+    <!-- Ключевое слово with используется, чтобы передать дополнительные переменные в шаблон -->
+     {{ posts. }}
+    {% include "pagination.html" with page=posts %}
 {% endblock content %}
