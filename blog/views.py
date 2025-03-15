@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Post
 
@@ -19,9 +19,17 @@ def post_list(request):
     # то используется стандартное значение 1, чтобы загрузить первую страницу.
     page_number = request.GET.get('page', 1)
 
-    # Получаем объект для желаемой страницы, вызывая метод page()
-    # класса Paginator, который возвращает объект Page
-    posts = painator.page(page_number)
+    try:
+        # Получаем объект для желаемой страницы, вызывая метод page()
+        # класса Paginator, который возвращает объект Page
+        posts = painator.page(page_number)
+    except PageNotAnInteger:
+        # Если page_number не целое число, то выдать первую страницу
+        posts = painator.page(1)
+    except EmptyPage:
+        # Если page_number находиться вне диапазона, то
+        # выдать последнюю страницу
+        posts = painator.page(painator.num_pages)
 
     # Контекстные переменные, чтобы прорисовать шаблон
     context = {
