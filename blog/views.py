@@ -7,14 +7,23 @@ from django.views.decorators.http import require_POST
 
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
+from taggit.models import Tag
 
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     """ Представление списка постов на странице """
 
     # Извлекаем все посты со статусом PUBLISHED
     # используя созданый ранее менеджер
     posts = Post.published.all()
+
+    tag = None
+
+    if tag_slug:
+        # Извлекаем объекты tag с полученым слагом
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        # Фильтруем посты по тегам
+        posts = posts.filter(tags__in=[tag])
 
     # Постраничная разбивка с 3 постами на странице
     painator = Paginator(posts, 3)
@@ -38,7 +47,7 @@ def post_list(request):
 
     # Контекстные переменные, чтобы прорисовать шаблон
     context = {
-        'posts': posts,
+        'posts': posts, 'tag': tag
     }
 
     # Шаблон в котором прорисовывается контекст
