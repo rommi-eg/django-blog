@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import Comment
+
 
 class EmailPostForm(forms.Form):
     """ Класс формы позволяющей дплиться постами """
@@ -28,3 +30,13 @@ class EmailPostForm(forms.Form):
         # <textarea> вместо используемого по умолчанию элемента input.
         widget=forms.Textarea
     )
+
+
+class CommentForm(forms.ModelForm):
+    """ Класс формы отправки комментария """
+
+    class Meta:
+        model = Comment # модель из которой будет создана форма
+        fields = [
+            'name', 'email', 'body' # поля которые будут включены в форму
+        ]
