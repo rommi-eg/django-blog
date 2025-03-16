@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from django.db.models import Count
 
 from .models import Post, Comment
 from .forms import EmailPostForm, CommentForm
@@ -99,9 +100,27 @@ def post_detail(request, year, month, day, post):
     # Форма для комментирования пользователями
     form = CommentForm()
 
+    # Получаем список идентификаторов тегов текущего поста.
+    # values_list() - возвращает кортежи со значениями заданных полей
+    # float=True - чтобы получить одиночные значения [1, 2, 3, ...]
+    post_tag_ids = post.tags.values_list('id', flat=True)
+
+    # Берутся все посты, содержащие любой из этих тегов, за исключением
+    # текущего поста
+    similar_posts = Post.published.filter(tags__in=post_tag_ids
+    ).exclude(id=post.id)
+
+    # Применяется функция агрегирования Count. Её работа - генерировать
+    # вычисляемое поле - same_tags, которое содержит число тегов, общих
+    # со всеми запрошенными тегами. Результат упорядочивается по числу
+    # общих тегов (в убывающем порядке). Резульнат нарезается, чтобы
+    # получить только первые четыре поста
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')
+    ).order_by('-same_tags', '-publish')[:4]
+
     # Контекстные переменные, чтобы прорисовать шаблон
     context = {
-        'post': post, 'comments': comments, 'form': form
+        'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_posts
     }
 
     # Шаблон в котором прорисовывается контекст
