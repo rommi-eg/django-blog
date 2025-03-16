@@ -47,6 +47,7 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
+    """ Класс внешнего вида модели Comment в панели администратора """
 
     list_display = (
         'name', 'email', 'post', 'created', 'active'
