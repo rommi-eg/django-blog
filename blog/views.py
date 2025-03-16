@@ -1,8 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
+from django.core.mail import send_mail
+from django.conf import settings
 
 from .models import Post
+from .forms import EmailPostForm
 
 
 def post_list(request):
@@ -88,4 +91,58 @@ def post_detail(request, year, month, day, post):
     # Шаблон в котором прорисовывается контекст
     template = 'blog/post/detail.html'
     
+    return render(request=request, template_name=template, context=context)
+
+
+def post_share(request, post_id):
+    """ Представление обрабатывающее форму отправки письма с рекомендациями """
+
+    # Получаем пост по идентификатору id
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        status=Post.Status.PUBLISHED
+    )
+
+    sent = False
+
+    if request.method == 'POST':
+        # Форма была передана на обработку
+        form = EmailPostForm(request.POST)
+        if form.is_valid():
+            # Поля формы успешно прошли валидацию
+            cd = form.cleaned_data
+
+            # Получаем абсолютный путь к посту
+            post_url = request.build_absolute_uri(
+                post.get_absolute_url()
+            )
+
+            # Создаем тему сообщения
+            subject = (
+                f'{cd['name']} recommends you read {post.title}'
+            )
+
+            # Создаем текст сообщения
+            message = (
+                f'Read {post.title} at {post_url}\n\n'
+                f'{cd['name']}\'s comments: {cd['comments']}'
+            )
+
+            # Отправляем электронное письмо
+            send_mail(
+                subject=subject, # Тема
+                message=message, # Сообщение
+                from_email=settings.EMAIL_HOST_USER, # почта отправки сообщений
+                recipient_list=[cd['to']] # кому отправлять сообщение
+            )
+
+            sent = True
+    else:
+        form = EmailPostForm()
+
+    context = {'post': post, 'form': form, 'sent': sent}
+
+    template = 'blog/post/share.html'
+
     return render(request=request, template_name=template, context=context)
