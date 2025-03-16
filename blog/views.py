@@ -84,9 +84,15 @@ def post_detail(request, year, month, day, post):
         publish__day=day
     )
 
+    # Список активных комментариев к этому посту
+    comments = post.comments.filter(active=True)
+
+    # Форма для комментирования пользователями
+    form = CommentForm()
+
     # Контекстные переменные, чтобы прорисовать шаблон
     context = {
-        'post': post,
+        'post': post, 'comments': comments, 'form': form
     }
 
     # Шаблон в котором прорисовывается контекст
