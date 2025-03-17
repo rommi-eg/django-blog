@@ -1,5 +1,6 @@
 <!-- Наследуемся от шаблонв base.html -->
 {% extends "blog/base.html" %}
+{% load blog_tags %}
 
 <!-- Заполняем блок title -->
 {% block title %}My Blog{% endblock title %}
@@ -42,7 +43,7 @@
         <!-- Вставляем тело публиуации и применяем два фильтра -->
         <!-- truncatewords:30 - уcекает значение до указанного числа слов -->
         <!-- linebreaks - конвертирует резульнат в разрывы строк в формате HTML -->
-        {{ post.body|truncatewords:30|linebreaks }}
+        {{ post.body|markdown|truncatewords_html:30 }}
     {% endfor %}
     <!-- Загружаем шаблон pagination.html и прорисовываем его с использованием текущего шаблона -->
     <!-- Ключевое слово with используется, чтобы передать дополнительные переменные в шаблон -->
