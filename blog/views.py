@@ -218,11 +218,11 @@ def post_search(request):
 
     form = SearchForm()
     query = None
-    results = list()
+    results = []
 
     if 'query' in request.GET:
         form = SearchForm(request.GET)
-        if form.is_valid:
+        if form.is_valid():
             query = form.cleaned_data['query']
             results = Post.published.annotate(
                 search=SearchVector('title', 'body'),
