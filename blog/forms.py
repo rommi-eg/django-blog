@@ -40,3 +40,8 @@ class CommentForm(forms.ModelForm):
         fields = [
             'name', 'email', 'body' # поля которые будут включены в форму
         ]
+
+
+class SearchForm(forms.Form):
+    """ Класс формы поиска """
+    query = forms.CharField()
