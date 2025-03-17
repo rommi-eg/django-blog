@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites', # мультисайтовость (не работала карта сайта)
+    'django.contrib.sites', # мультисайтовость
     'django.contrib.sitemaps',
     'blog.apps.BlogConfig',
     'taggit',
